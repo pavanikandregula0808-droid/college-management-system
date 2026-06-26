@@ -13,15 +13,17 @@ const PORT = process.env.PORT || 5000;
 app.use(cors()); 
 app.use(express.json()); 
 
-// 2. MySQL Connection Configuration
+// 2. MySQL Connection Configuration (Updated for Cloud SSL Compatibility)
 const db = mysql.createPool({
   host: process.env.DB_HOST || 'localhost',
   user: process.env.DB_USER || 'root',
   password: process.env.DB_PASSWORD || '',
   database: process.env.DB_NAME || 'college_system',
+  port: process.env.DB_PORT || 3306,
   waitForConnections: true,
   connectionLimit: 10,
-  queueLimit: 0
+  queueLimit: 0,
+  ssl: process.env.DB_HOST ? { rejectUnauthorized: false } : false // Uses SSL on the cloud, disables it on your local laptop machine
 });
 
 // 3. Test Database Connection & Automatically Create and Sync Tables
