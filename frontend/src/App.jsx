@@ -1,10 +1,10 @@
 import React from 'react';
 import Faculty from './components/Faculty';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/Login';
+import Login from './components/login'; // FIXED: Changed 'Login' to lowercase 'login' to match file system case-sensitivity
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
-import Academics from './components/Academics'; // Added import
+import Academics from './components/Academics'; 
 
 function App() {
   return (
