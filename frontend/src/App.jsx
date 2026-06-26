@@ -1,7 +1,8 @@
 import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import Home from './components/Home'; // 🚀 Imported your brand new dual-option gateway landing page
 import Faculty from './components/Faculty';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/login'; // FINAL FIXED PATH: Back to clean, lowercase 'login' mapping
+import Login from './components/login'; 
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Academics from './components/Academics'; 
@@ -10,15 +11,15 @@ function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/faculty" element={<Faculty />} />
+        {/* 1. Root Gateway page showing both Sign In and Sign Up entrypoints */}
+        <Route path="/" element={<Home />} />
+
+        {/* 2. Individual Authentication & Feature Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/faculty" element={<Faculty />} />
         <Route path="/dashboard" element={<Dashboard />} />
-        
-        {/* Added the Academics view route mapping */}
         <Route path="/academics" element={<Academics />} />
-
-        <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
   );
