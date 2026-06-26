@@ -1,7 +1,7 @@
 import React from 'react';
 import Faculty from './components/Faculty';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import Login from './components/login_backup'; // TEMPORARY: Pointing to backup file to force Git to reset its tracking cache
+import Login from './components/login'; // FINAL FIXED PATH: Back to clean, lowercase 'login' mapping
 import Register from './components/Register';
 import Dashboard from './components/Dashboard';
 import Academics from './components/Academics'; 
