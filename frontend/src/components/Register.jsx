@@ -21,8 +21,8 @@ const Register = () => {
     setError('');
 
     try {
-      // Sending data packet to your backend registration endpoint
-      const response = await axios.post('http://localhost:5000/api/auth/register', formData);
+      // Sending data packet to your live production cloud backend on Render 🚀
+      const response = await axios.post('https://college-management-system-uk0d.onrender.com/api/auth/register', formData);
       
       setMessage(response.data.message);
       // Reset form fields except the role dropdown
