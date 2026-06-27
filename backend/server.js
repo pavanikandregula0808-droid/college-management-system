@@ -131,15 +131,16 @@ db.getConnection((err, connection) => {
   }
 });
 
-// 4. API Endpoint: User Registration
+// 4. API Endpoint: User Registration (Fixed & Robust Casing Handling)
 app.post('/api/auth/register', async (req, res) => {
   let { name, email, password, role } = req.body;
 
   if (!name || !email || !password || !role) {
-    return res.status(400).json({ message: "Please enter all required fields" });
+    return res.status(400).json({ message: "Please enter all required fields." });
   }
 
-  // Normalize casing to match database expectation
+  // Safely capitalize first letter to ensure matching with legacy table lookups (e.g. 'Student')
+  role = role.trim();
   role = role.charAt(0).toUpperCase() + role.slice(1).toLowerCase();
 
   try {
@@ -151,20 +152,21 @@ app.post('/api/auth/register', async (req, res) => {
     db.query(sqlQuery, [name, email, hashedPassword, role], (err, result) => {
       if (err) {
         console.error('❌ MySQL Registration Query Failed:', err);
-        if (err.code === 'ER_DUP_ENTRY') {
-          return res.status(400).json({ message: "This email is already registered!" });
+        if (err.code === 'ER_DUP_ENTRY' || err.sqlState === '23000') {
+          return res.status(400).json({ message: "This institutional email is already registered!" });
         }
-        return res.status(500).json({ error: err.message });
+        return res.status(500).json({ message: `Database constraint failure: ${err.message}` });
       }
-      res.status(201).json({ 
-        message: "User registered successfully!", 
+      
+      return res.status(201).json({ 
+        message: "User account provisioned successfully!", 
         userId: result.insertId 
       });
     });
 
   } catch (error) {
     console.error('❌ Server Try-Catch Failed:', error);
-    res.status(500).json({ message: "An error occurred on the server." });
+    return res.status(500).json({ message: "Internal server authentication configuration routine fault." });
   }
 });
 
