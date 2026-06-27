@@ -20,77 +20,86 @@ const Academics = () => {
     // Parse the user object from browser storage
     const currentUser = JSON.parse(savedUser);
 
-    // DYNAMIC FETCH: Pass the unique student user id straight to our Express API query
-    axios.get(`http://localhost:5000/api/student/academics?userId=${currentUser.id}`)
+    // ✅ FIXED LIVE PIPELINE ROUTE: Now pointing straight to your production backend on Render!
+    axios.get(`https://college-management-system-uk0d.onrender.com/api/student/academics?userId=${currentUser.id}`)
       .then(res => setAcademicData(res.data))
-      .catch(err => setError('Failed to load academic records from database.'));
+      .catch(err => setError('Failed to pull verified academic matrices from database pipeline.'));
   }, [navigate]);
 
-  if (error) return <div style={styles.error}>{error}</div>;
-  if (!academicData) return <div style={styles.loading}>Loading academic records...</div>;
+  if (error) return <div style={styles.error}>⚠️ {error}</div>;
+  if (!academicData) return <div style={styles.loading}>Initializing workspace secure node connection...</div>;
 
   return (
     <div style={styles.container}>
       <header style={styles.header}>
-        <h2>Academic Performance Dashboard</h2>
-        <Link to="/dashboard" style={styles.backBtn}>Back to Main Hub</Link>
+        <h2 style={styles.mainTitle}>Academic Performance Node</h2>
+        <Link to="/dashboard" style={styles.backBtn}>Back to Dashboard</Link>
       </header>
 
       <div style={styles.mainGrid}>
         {/* Attendance & GPA Summary Cards */}
         <div style={styles.summaryRow}>
           <div style={styles.card}>
-            <h3>Semester Attendance</h3>
+            <h3 style={styles.cardTitle}>Semester Attendance</h3>
             <div style={styles.progressContainer}>
-              <div style={{ ...styles.progressBar, width: `${academicData.attendance}%`, backgroundColor: academicData.attendance >= 75 ? '#0f9d58' : '#ea4335' }}></div>
+              <div style={{ ...styles.progressBar, width: `${academicData.attendance}%`, backgroundColor: academicData.attendance >= 75 ? '#10b981' : '#ef4444' }}></div>
             </div>
-            <p style={styles.cardValue}>{academicData.attendance}% Status</p>
-            <small>{academicData.attendance >= 75 ? '✅ Attendance criteria met.' : '❌ Warning: Below 75% requirement.'}</small>
+            <p style={styles.cardValue}>{academicData.attendance}% Metrics</p>
+            <small style={{ color: academicData.attendance >= 75 ? '#34d399' : '#f87171', fontWeight: '600' }}>
+              {academicData.attendance >= 75 ? '✅ Institutional attendance requirements satisfied.' : '❌ Structural Danger: Below 75% baseline.'}
+            </small>
           </div>
 
           <div style={styles.card}>
-            <h3>Current Cumulative GPA</h3>
-            <p style={{ ...styles.cardValue, fontSize: '36px', color: '#1a73e8' }}>{academicData.gpa} / 10</p>
-            <p style={styles.subtext}>Based on verified semester evaluation sheets.</p>
+            <h3 style={styles.cardTitle}>Cumulative Grade Point Average</h3>
+            <p style={{ ...styles.cardValue, fontSize: '42px', color: '#6366f1' }}>{academicData.gpa} <span style={{fontSize: '18px', color: '#64748b'}}> / 10</span></p>
+            <p style={styles.subtext}>Verified active cumulative evaluation index.</p>
           </div>
         </div>
 
         {/* Internal Examination Marks Table */}
         <div style={styles.card}>
-          <h3>Internal Assessment Performance</h3>
-          <table style={styles.table}>
-            <thead>
-              <tr style={styles.tableHeader}>
-                <th style={styles.th}>Subject / Course</th>
-                <th style={styles.th}>Obtained Marks</th>
-                <th style={styles.th}>Maximum Weightage</th>
-                <th style={styles.th}>Percentage</th>
-              </tr>
-            </thead>
-            <tbody>
-              {academicData.internals.map((item, idx) => (
-                <tr key={idx} style={styles.tableRow}>
-                  <td style={styles.td}><strong>{item.subject}</strong></td>
-                  <td style={styles.td}>{item.obtainedMarks}</td>
-                  <td style={styles.td}>{item.maxMarks}</td>
-                  <td style={styles.td}>{((item.obtainedMarks / item.maxMarks) * 100).toFixed(1)}%</td>
+          <h3 style={styles.cardTitle}>Internal Assessment Metrics</h3>
+          <div style={{ overflowX: 'auto' }}>
+            <table style={styles.table}>
+              <thead>
+                <tr style={styles.tableHeader}>
+                  <th style={styles.th}>Subject / Course Vector</th>
+                  <th style={styles.th}>Obtained Score</th>
+                  <th style={styles.th}>Max Allocation</th>
+                  <th style={styles.th}>Relative Yield</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {academicData.internals.map((item, idx) => (
+                  <tr key={idx} style={styles.tableRow}>
+                    <td style={styles.td}><strong style={{color: '#f8fafc'}}>{item.subject}</strong></td>
+                    <td style={styles.td}>{item.obtainedMarks}</td>
+                    <td style={styles.td}>{item.maxMarks}</td>
+                    <td style={{ ...styles.td, color: '#38bdf8', fontWeight: '600' }}>{((item.obtainedMarks / item.maxMarks) * 100).toFixed(1)}%</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
         {/* Pending Coursework / Assignments */}
         <div style={styles.card}>
-          <h3>Coursework & Active Assignments</h3>
+          <h3 style={styles.cardTitle}>Active Curricular Task Queues</h3>
           <ul style={styles.list}>
             {academicData.assignments.map((task) => (
               <li key={task.id} style={styles.listItem}>
                 <div>
-                  <strong>{task.title}</strong>
-                  <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#5f6368' }}>Due Date: {task.dueDate}</p>
+                  <strong style={{color: '#e2e8f0'}}>{task.title}</strong>
+                  <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#94a3b8' }}>Pipeline Deadline: {task.dueDate}</p>
                 </div>
-                <span style={{ ...styles.statusBadge, backgroundColor: task.status === 'Submitted' ? '#e6f4ea' : '#fce8e6', color: task.status === 'Submitted' ? '#137333' : '#c5221f' }}>
+                <span style={{ 
+                  ...styles.statusBadge, 
+                  backgroundColor: task.status === 'Submitted' ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)', 
+                  color: task.status === 'Submitted' ? '#34d399' : '#f87171',
+                  border: task.status === 'Submitted' ? '1px solid rgba(16, 185, 129, 0.3)' : '1px solid rgba(239, 68, 68, 0.3)'
+                }}>
                   {task.status}
                 </span>
               </li>
@@ -103,26 +112,28 @@ const Academics = () => {
 };
 
 const styles = {
-  container: { minHeight: '100vh', backgroundColor: '#f4f6f9', padding: '30px', fontFamily: 'Arial, sans-serif' },
-  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '900px', margin: '0 auto 20px auto' },
-  backBtn: { textDecoration: 'none', color: '#1a73e8', fontWeight: 'bold', fontSize: '15px' },
-  mainGrid: { maxWidth: '900px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '20px' },
-  summaryRow: { display: 'flex', gap: '20px', flexWrap: 'wrap' },
-  card: { backgroundColor: '#fff', padding: '25px', borderRadius: '8px', boxShadow: '0 4px 12px rgba(0,0,0,0.05)', flex: 1, minWidth: '280px' },
-  cardValue: { fontSize: '28px', fontWeight: 'bold', margin: '10px 0 5px 0', color: '#202124' },
-  subtext: { margin: 0, color: '#5f6368', fontSize: '14px' },
-  progressContainer: { width: '100%', height: '12px', backgroundColor: '#dadce0', borderRadius: '6px', overflow: 'hidden', marginTop: '15px' },
-  progressBar: { height: '100%', transition: 'width 0.4s ease' },
-  table: { width: '100%', borderCollapse: 'collapse', marginTop: '15px' },
-  tableHeader: { backgroundColor: '#f8f9fa', textAlign: 'left', borderBottom: '2px solid #dadce0' },
-  th: { padding: '12px', fontSize: '14px', color: '#3c4043', fontWeight: 'bold' },
-  tableRow: { borderBottom: '1px solid #e8eaed' },
-  td: { padding: '12px', fontSize: '14px', color: '#202124' },
-  list: { listStyle: 'none', padding: 0, margin: '15px 0 0 0', display: 'flex', flexDirection: 'column', gap: '10px' },
-  listItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px', backgroundColor: '#f8f9fa', borderRadius: '6px', border: '1px solid #e8eaed' },
-  statusBadge: { padding: '4px 8px', borderRadius: '4px', fontSize: '12px', fontWeight: 'bold' },
-  loading: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '18px', color: '#5f6368' },
-  error: { padding: '20px', color: '#c5221f', textAlign: 'center' }
+  container: { minHeight: '100vh', backgroundColor: '#0f172a', padding: '40px 20px', fontFamily: '"Inter", sans-serif' },
+  header: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '960px', margin: '0 auto 30px auto', borderBottom: '1px solid #1e293b', paddingBottom: '16px' },
+  mainTitle: { color: '#f8fafc', margin: 0, fontSize: '26px', fontWeight: '700', letterSpacing: '-0.5px' },
+  backBtn: { textDecoration: 'none', color: '#818cf8', fontWeight: '600', fontSize: '14px', padding: '8px 16px', borderRadius: '6px', border: '1px solid #334155', backgroundColor: '#1e293b', transition: 'all 0.2s ease' },
+  mainGrid: { maxWidth: '960px', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '24px' },
+  summaryRow: { display: 'flex', gap: '24px', flexWrap: 'wrap' },
+  card: { backgroundColor: '#1e293b', padding: '28px', borderRadius: '14px', boxShadow: '0 20px 25px -5px rgba(0,0,0,0.3)', flex: 1, minWidth: '290px', border: '1px solid #334155' },
+  cardTitle: { color: '#cbd5e1', fontSize: '16px', fontWeight: '600', margin: '0 0 16px 0', letterSpacing: '0.3px' },
+  cardValue: { fontSize: '32px', fontWeight: '700', margin: '12px 0 6px 0', color: '#f8fafc' },
+  subtext: { margin: 0, color: '#94a3b8', fontSize: '14px', lineHeight: '1.5' },
+  progressContainer: { width: '100%', height: '10px', backgroundColor: '#0f172a', borderRadius: '6px', overflow: 'hidden', marginTop: '16px', marginBottom: '12px', border: '1px solid #334155' },
+  progressBar: { height: '100%', transition: 'width 0.5s cubic-bezier(0.4, 0, 0.2, 1)' },
+  table: { width: '100%', borderCollapse: 'collapse', marginTop: '8px' },
+  tableHeader: { backgroundColor: '#0f172a', textAlign: 'left', borderBottom: '2px solid #334155' },
+  th: { padding: '14px', fontSize: '13px', color: '#94a3b8', fontWeight: '600', letterSpacing: '0.5px' },
+  tableRow: { borderBottom: '1px solid #334155', backgroundColor: 'transparent', transition: 'background 0.2s' },
+  td: { padding: '14px', fontSize: '14px', color: '#cbd5e1' },
+  list: { listStyle: 'none', padding: 0, margin: '8px 0 0 0', display: 'flex', flexDirection: 'column', gap: '12px' },
+  listItem: { display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '14px 18px', backgroundColor: '#0f172a', borderRadius: '8px', border: '1px solid #334155' },
+  statusBadge: { padding: '6px 12px', borderRadius: '6px', fontSize: '12px', fontWeight: '600', letterSpacing: '0.3px' },
+  loading: { display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', fontSize: '16px', color: '#94a3b8', backgroundColor: '#0f172a' },
+  error: { padding: '30px', color: '#f87171', backgroundColor: '#0f172a', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', fontSize: '16px', fontWeight: '600' }
 };
 
 export default Academics;
